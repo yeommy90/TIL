@@ -350,11 +350,64 @@ document.addEventListener("click", function() {
 
 
 
+### 08-3 웹요소의 태그 속성 가져와서 수정하기
+
++ getAttribute() : 속성에 접근
++ setAttribute() : 속성을 변경
+
+```javascript
+document.queryselector("#prod-img > img").setAttribute("src", "이미지 경로") // 선택한 ID값의 src 속성을 변경
+```
 
 
 
 
 
+### 08-5 웹요소의 스타일 수정하기
+
++ display:none : 요소가 차지하던 공간도 사라짐
++ visibility:hidden : 요소가 있던 공간이 빈 상태로 남음
+
+
+
+
+
+### 08-6 DOM에 요소 추가하기
+
+```javascript
+var newP = document.createElement("p") // 요소 노드 만들기
+
+var newText = document.createTextNode("주문이 완료되었땅") // 텍스트 노드 만들기
+
+newP.appendChild(newText) // 텍스트 노드를 요소 노드의 자식으로 설정
+
+document.body.appendChild(newP) // 요소 노드를 body 태그의 자식으로 설정
+
+var attr = document.createAttribute("class") // class 속성 노드 
+attr.value = "accent" // class 속성 노드의 값
+
+newP.setAttributeNode(attr) // 요소 노드와 연결
+```
+
+
+
+### 08-7 노드 순서 바꾸거나 삭제하기
+
+```javascript
+document.querySelectorAll("p")[0].hasChildNodes() // 자식 노드가 있는지 확인 t/f
+
+document.querySelector("#nameList").childNodes // 자식 노드 리스트 줄바꿈도 텍스트 노드로 인식함
+
+document.querySelector("#nameList").children // 자식 노드 중 요소에만 접근
+
+var nameList = document.querySelector("#nameList")
+nameList.insertBefore(nameList.children[2], nameList.children[0])
+// 마지막 노드를 첫번째 노드 앞으로 이동
+
+var firstDel = document.querySelectorAll(".del")[0] // 첫번째 X
+var firstP = document.querySelectorAll("p")[0] // 위의 부모
+firstP.removeChild(firstDel) // 부모의 자식을 삭제...
+```
 
 
 
