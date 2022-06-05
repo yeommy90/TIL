@@ -413,6 +413,54 @@ firstP.removeChild(firstDel) // 부모의 자식을 삭제...
 
 
 
+## 09. 폼과 자바스크립트
+
+### 09-1 폼 요소에 접근하기
+
+```javascript
+document.querySelector("#billingName").value
+// 텍스트 필드의 id를 사용해 가져오기
+
+document.ship.shippongName.value
+// 텍스트 필드의 name을 사용해 가져오기, form과 form요소 모두 name 속성이 있어야함!
+
+document.forms[0].elements[0].value
+// 첫번째 폼의 첫번째 요소의 값, 선택자가 없을때
+```
+
+
+
+### 09-2 폼 요소에서 입력값 검증하기
+
++ change 이벤트 : 필드에 입력을 마치고 빠져나올때 발생
+
+
+
+### 09-3 다양한 폼 요소 다루기
+
+```javascript
+document.querySelector("#major").options 
+// 옵션 항목에 접근하기
+
+document.querySelector("#major").options[0].innerText
+// 첫번재 옵션이 화면에 표시하는 내용에 접근하기
+
+document.querySelector("#major").options[0].value
+// 첫번째 옵션이 서버로 넘겨주는 값 접근하기
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
