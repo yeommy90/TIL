@@ -451,15 +451,62 @@ document.querySelector("#major").options[0].value
 
 
 
+## 10. 브라우저 객체 모델
+
+### 10-1 브라우저 객체 모델이란?
+
++ 자바스크립트를 통해 브라우저 창을 관리할 수 있도록 브라우저 요소를 객체화해 놓은 것
 
 
 
+### 10-2 window 객체의 함수
+
++ window 객체는 기본 객체이기 때문에 생략 가능
+
+  - alert(), blur(), close(), prompt() 등
+
+  ```javascript
+  window.open("https://www.naver.com", "_self")
+  // 현재 창에 새 창이 표시됨
+  
+  window.open("https://www.naver.com", "", "left=0, top=0, width=300, height=300")
+  // 화면 왼쪽 위, 가로세로 300px로 새 창이 열림
+  
+  var newWin = window.open("","","width=300, height=300")
+  newWin.resizeBy(100,100) // 현재 브라우저 창을 기준으로 늘림
+  newWin.resizeTo(300,300) // 최종 크기를 지정
+  newWin.moveBy(500,500) // 현재 위치에서 이동
+  newWin.moveTo(0,0) // 왼쪽 위 모서리를 기준으로 이동
+  ```
+
+  
+
+### 10-3 Navigator 객체
+
++ 렌더링 엔진 : 웹 문서의 태그와 스타일을 해석하는 프로그램
+
++ 자바스크립트 엔진 : 자바스크립트 소스를 해석하는 프로그램
+
++ userAgent : 클라이언트에서 서버로 정보를 보낼 때 클라이언트에서 함께 보내는 정보로 서버에서는 이 정보를 보고 브라우저 종류를 확인한 후 브라우저에 맞게 웹 페이지를 표시함.
+
+  ```javascript
+  navigator.userAgent
+  ```
 
 
 
+### 10-4 그밖의 브라우저 객체
 
++ history : 뒤로, 앞으로 또는 주소표시줄에 입력해서 돌아다녔던 사이트 주소가 저장
 
++ location : 브라우저의 주소 표시줄 = 현재 문서의 url 주소 정보
 
+  ```javascript
+  <button onclick="location.reload()">새로고침</button>
+  <button onclick="location.replace('https://www.naver.com')">네이버</button>
+  ```
+
+  
 
 
 
