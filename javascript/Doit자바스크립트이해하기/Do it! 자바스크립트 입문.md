@@ -512,6 +512,80 @@ document.querySelector("#major").options[0].value
 
 
 
+## 실전 프로젝트 
+
+### 1. 로컬 스토리지
+
++ 웹 스토리지 : 클라이언트쪽에 자료를 저장하는 방법으로 등장
+
++ 세션 스토리지 : 브라우저 창이나 탭을 닫을때까지 (세션) 자료를 저장. 세션이 끝나면 자료를 지움
+
++ 로컬 스토리지 : 메소드를 사용해 웹브라우저에 저장, 불러오기 등이 가능
+
+  - getItem(key)
+  - setItem(key, value)
+  - clear()
+
+  ```javascript
+  localStorage.setItem(1, "첫 번째 값") // 로컬 스토리지에 키-값 저장
+  localStorage.getItem(1) // 첫번째 키값 가져오기
+  ```
+
+  - 배열 가져오기 : JSON.stringify() 를 사용해 배열을 하나의 문자열로 저장
+
+    ​							JSON.parse() 를 사용해 문자열을 배열 형태로 변환
+
+  ```javascript
+  localStorage.setItem("storageList", JSON.stringify(itemList));
+  // 배열을 JSON 메소드를 사용해 문자열로 변경
+  
+  function getItem() {
+      var data = localStorage.getItem("storageList");
+      if(data != null) {
+          itemList = JSON.parse(data);
+      }
+      showList();
+  }
+  ```
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
