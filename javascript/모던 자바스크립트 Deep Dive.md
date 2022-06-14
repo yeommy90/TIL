@@ -837,3 +837,248 @@ false && 'dog' // false
 ```
 
 + 어떤 조건이 Truthy 값일 때 무언가를 해야한다면 논리곱 연산자 표현식으로 if문을 대체할 수 있다.
+
+```javascript
+var done = true;
+var message = '';
+
+message = done && '완료';
+console.log(message); // '완료'
+```
+
++ 어떤 조건이 Falsy 값일 때 무언가를 해야한다면 논리합 연산자 표현식으로 if문을 대체할 수 있다.
+
+```javascript
+var done = false;
+var message = '';
+
+message = done || '미완료';
+console.log(message); // '미완료'
+```
+
++ 단축 평가는 다음과 같은 상황에서 유용하게 사용된다.
+
+  - 객체를 상대하는 변수가 null 또는 undefined가 아닌지 확인하고 프로퍼티를 참조할 때
+
+  ```javascript
+  var element = null;
+  
+  var value = element.value; // TypeError
+  // null로 선언된 객체의 프로퍼티를 참조하려고 해서 에러가 발생
+  
+  var value = element && element.value // null
+  // 1) element가 null이면 false로 평가되므로 그대로 element(null) 할당
+  // 2) element가 null이 아니면 truthy로 평가되므로 프로퍼티를 할당
+  ```
+
+  - 함수 매개변수에 기본값을 설정할 때
+
+  ```javascript
+  function getName(name) {
+  	var userName = name;
+  	return = userName;
+  }
+  
+  getName(); // undefined
+  // name 매개변수에 값이 없으므로 자동적으로 undefined가 할당된다. 다른곳에서 참조할 경우 에러발생 가능성!!
+  
+  function getName(name) {
+  	var userName = name || '무명';
+  	return = userName;
+  }
+  
+  getName('김서영'); // '김서영'
+  getName(); // '무명'
+  // 1) name 매개변수에 값이 있다면 truthy로 평가되므로 그대로 값을 사용
+  // 2) name 매개변수에 값이 없다면(undefined) falsy로 평가되므로 '무명' 사용
+  ```
+
+#### 9.4.2 옵셔널 체이닝 연산자 (?.)
+
++ ES11에서 도입된 것으로 도입되기 이전에는 논리연산자 &&를 사용한 단축평가를 통해 변수를 확인했다.
+
++ 좌항의 피연산자가 null 또는 undefined인 경우 undefined를 반환하고 그렇지 않으면 우항의 프로퍼티를 참조한다. ->  좌항이 null 이 아니면(true) 우항
++ 객체의 프로퍼티를 참조할 때 null 체크를 편하게 할 수 있다.
+
+```javascript
+var element = null;
+
+var value = element?.value;
+console.log(value); // undefined
+// 좌항의 피연산자가 null 이므로 undefined 반환
+
+var str = '';
+
+var length = str?.length;
+console.log(length); // 0
+// 좌항의 피연산자가 falsy 값이라도 null 또는 undefined 가 아니므로 우항의 프로퍼티를 참조해 0이 된다.
+```
+
+#### 9.4.3 null 병합 연산자 (??)
+
++ ES11에서 도입된 것으로 도입 이전에는 논리연산자 ||를 사용한 단축평가를 통해 변수를 확인했다.
++ 좌항의 피연산자가 null 또는 undefined인 경우 우항을 반환하고 그렇지 않으면 좌항을 반환한다. -> 좌항이 null 이 아니면(true) 좌항
++ 변수를 참조할 때 null 체크를 편하게 할 수 있다.
+
+```javascript
+var foo = null ?? 'default string';
+console.log(foo); // 'default string'
+// 좌항 null 이므로 우항 반환
+
+var foo = '' ?? 'default string';
+console.log(foo); // ''
+// 좌항이 falsy 값이라도 null 또는 undefined 가 아니므로 좌항 반환
+```
+
+
+
+
+
+# 10장 객체 리터럴
+
+### 10.1 객체란
+
++ 원시값을 제외한 자바스크립트를 구성하는 함수, 배열, 정규 표현식 등은 모두 객체
+
++ 원시타입의 값은 변경불가능하지만 객체는 변경가능한 값이다.
+
++ 객체는 객체의 상태를 나타내는 값(프로퍼티)과 프로퍼티를 참조하고 조작할 수 있는 동작(메서드)을 모두 포함한다.
+
+  - 프로퍼티 : 객체의 상태를 나타내는 값(data)
+  - 메서트 : 프로퍼티를 참조하고 조작할 수 있는 동작(behavior)
+
+  ```javascript
+  var counter = {
+  	num: 0; // 프로퍼티
+  	increase: function() {
+  		this.num++; // 메서드
+  	}
+  }
+  ```
+
+
+
+### 10.2 객체 리터럴에 의한 객체 생성
+
++ 다양한 객체 생성 방법을 지원 
+
++ 객체 리터럴 / Object 생성자 함수 / 생성자 함수 / Object.create 메서드 / 클래스(ES6)
+
+  - 객체 리터럴 : 중괄호 내에 0개 이상의 프로퍼티를 정의하며 변수에 할당되는 시점에 객체 리터럴을 해석해 객체를 생성
+
+  ```javascript
+  var person = {
+  	name: 'Kim',
+  	sayHello: functiong() {
+  		console.log(`Hello! My name is &{this.name}.`0);
+  	}
+  };
+  //객체 리터럴은 값으로 평가되는 표현식이며 코드블록이 아니기에 닫는 중괄호 뒤에 세미콜론을 붙인다.
+  
+  console.log(typeof person); // object
+  ```
+
+  
+
+### 10.3 프로퍼티
+
++ 객체는 프로퍼티의 집합이며 키와 값으로 구성된다.
+
++ 프로퍼티를 나열할 때는 쉼표로 구분한다.
+
++ 프로퍼티 키 : 빈 문자열을 포함하는 모든 문자열 또는 심벌 값 / 가급적 네이밍 규칙을 준수하는 프로퍼티 키를 사용 / 암묵적 타입 변환으로 문자열이 됨
+
+  중복 선언하면 먼저 선언한 프로퍼티를 덮어쓰고 에러를 발생하지 않으니 주의
+
++ 프로퍼티 값 : 자바스크립트에서 사용할 수 있는 모든 값
+
+
+
+### 10.4 메서드
+
++ 객체에 묶여있는 함수 = 프로퍼티 값이 함수일 경우 일반 함수와 구분하기 위해 메서드라 부른다.
+
+
+
+### 10.5 프로퍼티 접근
+
++ 마침표 표기법 : 반드시 식별자 네이밍 규칙을 준수해야 한다. (SyntaxError 발생)
+
+```javascript
+var person = {
+	name: "Kim"
+    'last-name': "Kim",
+    1: 10
+};
+
+console.log(person.name); // Kim
+person.'last-name'; // SyntaxError
+person.'1'; // SyntaxError
+```
+
++ 대괄호 표기법 : 프로퍼티 키는 반드시 따옴표로 감싼 문자열이어야 한다. (ReferenceError 발생)
+
+```javascript
+var person = {
+	name: "Kim"
+};
+
+console.log(person[name]); // ReferenceError
+```
+
++ 존재하지 않는 프로퍼티에 접근하면 undefined 를 반환
+
+
+
+### 10.7 프로퍼티 동적 생성 / 삭제
+
+```javascript
+var person = {
+	 name: 'Kim'
+};
+
+person.age = 20; // 존재하지 않는 프로퍼티를 동적으로 생성할 수 있다.
+
+console.log(person); // {name: "Kim", age: 20}
+
+delete person.age; // age 프로퍼티를 삭제할 수 있다.
+```
+
+
+
+### 10.9 ES6에서 추가된 객체 리터럴의 확장 기능
+
+#### 10.9.1 프로퍼티 축약 표현
+
++ 프로퍼티 값으로 변수를 사용하는 경우 변수 이름과 프로퍼티 키가 동일하면 키를 생략할 수 있다. 변수 이름으로 자동 생성된다.
+
+```javascript
+let x = 1, y = 2;
+
+const obj = {x, y};
+
+console.log(obj); // {x: 1, y: 2}
+```
+
+#### 10.9.2 계산된 프로퍼티 이름
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
