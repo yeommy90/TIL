@@ -1073,17 +1073,60 @@ console.log(obj); // {x: 1, y: 2}
 
 #### 10.9.2 계산된 프로퍼티 이름
 
++ 문자열 또는 문자열로 타입 변환할 수 있는 표현식을 사용해 프로퍼티 키를 동적으로 생성할 수 있다. 대괄호를 사용한다.
++ 프로퍼티 키와 값의 제약을 없애주기 때문에 더 강력하지만 작성이 번거로워 마침표 표기법 사용 중 복잡한 상황이 생길 때 사용한다.
 
+```javascript
+var prefix = 'prop';
+var i = 0;
 
+var obj = {};
 
+obj[prefix + '-' + ++i] = i; // 계산된 프로퍼티 이름으로 프로퍼티 키를 동적으로 생성
+obj[prefix + '-' + ++i] = i;
 
+console.log(obj); // {prop-1: 1, prop-2: 2}
+```
 
+```javascript
+var fruit = prompt("어떤 과일을 구매하시겠습니까?", "apple");
 
+var bag = {
+	[fruit]: 5, // 변수에서 프로퍼티 키를 동적으로 받아옴
+};
 
+alert(bag.apple); // 5
+```
 
+#### 10.9.3 메서드 축약 표현
 
++ ES5에서 메서드를 정의하려면 프로퍼티 값으로 함수를 할당한다.
++ ES5 선언 방식은 현재 사양에서는 일반 함수로 정의된다. -> new 로 인스턴스를 생성할 수 있다.
 
+```javascript
+var obj = {
+	name: "kim",
+	sayHi: function() {
+		console.log('Hi! ' + this.name);
+	}
+};
 
+obj.sayHi(); // Hi! kim
+```
+
++ ES6에서는 메서드를 정의할 때 축약 표현을 사용할 수 있다.
++ ES6 메서드 축약 표현만 메서드로 인정한다. -> 일반 함수가 아니므로 new 로 인스턴스를 생성할 수 없다. (TypeError)
+
+```javascript
+const obj = {
+	name: "Kim",
+	sayHi() {
+		console.log('Hi! ' + this.name);
+	}
+};
+
+obj.sayHi(); // Hi! Kim
+```
 
 
 
