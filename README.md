@@ -28,6 +28,6 @@
 
 ### Network
 
-- [모두의 네트워크](Network/network.md)
+- [모두의 네트워크](Network/모두의_네트워크.md)
 
 <br>
