@@ -322,6 +322,67 @@ while(i < data.length){
 // 선택한 객체의 id 값을 인수로 저장해놓고 실행
 ```
 
++ 상위 -> 하위 컴포넌트는 props 로 전달
++ 하위 -> 상위 컴포넌트는 하위 컴포넌트에서 event 로 상위 컴포넌트의 state 를 호출, state 값 수정
+
+<br>
+
+<br>
+
+### React Create
+
++ Control 컴포넌트 생성 후 CRUD 를 각각 onClick event 로 생성
++ App.js 파일 내 Control 컴포넌트에서는 onChangeMode 사용
+
+```jsx
+<Control onChangeMode={function(_mode){
+   this.setState({
+      mode:_mode
+   });
+}.bind(this)}></Control>
+```
+
++ onSubmit : HTML 태그가 가지고 있는 고유 기능, submit 버튼 누를 때 발생하는 이벤트
+
+```jsx
+<form action="/create_process" method="POST"
+	onSubmit={function(e){
+		e.preventDefault();
+		this.props.onSubmit(
+            e.target.title.value,
+            e.target.desc.value)
+	}.bind(this)}
+>
+
+// submit 이벤트 발생 시 폼태그 내의 title 과 desc 가 저장되는 곳은 e.target.title(desc).value
+```
+
++ push 는 원본을 바꾸고 concat 은 원본을 변경한 새로운 변수가 생성됨, 성능 개선시 매우 어려움
+
+```jsx
+else if(this.state.mode === 'create'){
+	_article = <CreateContent onSubmit={function(_title, _desc){
+	// add content to this.state.contents
+	this.max_content_id += 1;
+	var _contents = this.state.contents.concat(
+		{id:this.max_content_id, title:_title, desc:_desc}
+	);
+	this.setState({
+		contents:_contents
+	});
+}.bind(this)}></CreateContent>
+
+// max_content_id 는 ui 에 필요없는 정보이기에 this.state 에 저장하지 않고 바깥에서 객체로 선언
+```
+
+
+
+
+
+
+
+
+
 
 
 
