@@ -465,6 +465,8 @@ function Circle(radius) {
 
 const circle = Circle(5); // new 연산자 없이 호출해도 new.target 을 통해 생성자 함수로서 호출된다.
 console.log(circle.getDiameter()); // 10
+
+// new.target 을 통해 생성자 함수로 호출되었기에 radius 와 getDiameter 는 함수 Circle 의 프로퍼티와 메서드가 된다.
 ```
 
 + new.target 을 사용할 수 없는 상황 (IE) 에는 스코프 세이프 생성자 패턴을 사용할 수 있다.
@@ -519,14 +521,14 @@ function multiply(x, y) {
 }
 
 console.log(multiply(1, 2)); // 2
-arguments [1, 2,callee: f, Symbol(Symbol.iterator): f]
+arguments [1, 2, callee: f, Symbol(Symbol.iterator): f]
 0: 1
 1: 2
 callee: f multiply(x, y)
 length: 2
 
 console.log(multiply(1, 2, 3)); // 2
-arguments [1, 2, 3callee: f, Symbol(Symbol.iterator): f]
+arguments [1, 2, 3, callee: f, Symbol(Symbol.iterator): f]
 0: 1
 1: 2
 2: 3
@@ -582,7 +584,7 @@ var anonymousFunc = function() {};
 
 #### 18.2.6 prototype 프로퍼티
 
-+ 생성자 함수로 호출할 수 있는 함수 객체, 즉 constuctor 만이 소유하는 프로퍼티
++ 생성자 함수로 호출할 수 있는 함수 객체, 즉 constructor 만이 소유하는 프로퍼티
 + 함수가 객체를 생성하는 생성자 함수로 호출될 때 생성자 함수가 생성할 인스턴스의 프로토타입 객체를 가리킨다.
 
 ```javascript
