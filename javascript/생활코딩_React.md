@@ -375,15 +375,122 @@ else if(this.state.mode === 'create'){
 // max_content_id 는 ui 에 필요없는 정보이기에 this.state 에 저장하지 않고 바깥에서 객체로 선언
 ```
 
++ shouldComponentUpdate() 함수 : TOC 목록의 변화가 없음에도 render() 함수가 실행되는 것은 비합리적, true 일 때 render() 함수 실행, false 일 때 render() 함수 실행되지 않음
 
+```jsx
+shouldComponentUpdate(newProps, newState){
+	if (this.props.data === newProps.data) {
+		return false; // 현재 데이터와 새로운 데이터가 같을 경우, render 함수 실행되지 않음
+	}
+	return true; // 현재 데이터와 새로운 데이터가 다를 경우, render 함수 실행
+}
+```
 
++ Array.from(a) : 새로운 배열을 만들고 복제할 때 사용
++ Object.assign({}, a) : 새로운 객체를 만들고 복제할 때 사용
 
+```jsx
+var newContents = Array.from(this.state.contents);
+newContens.push(
+	{id:this.max_content_id, title:_title, desc:_desc}
+);
+this.setState({
+	contents:newContents
+});
 
+var a = {name:"seoyoung"};
+var b = Object.assign({}, a);
+console.log(a, b, a===b); // {name:"seoyoung"}, {name:"seoyoung"}, false
+```
 
++ 원본의 변형과 교체를 잘 구분합시다.
 
+<br>
 
+<br>
 
+### React Update
 
++ UpdateContent 내의 data 로 현재 선택된 content 의 값을 불러옴
 
+```jsx
+else if(this.state.mode === 'update'){
+	_content = this.getReadContent();
+	_article = <UpdateContent data={_content} onSubmit={function(_title, _desc){
+	// add content to this.state.contents
+	this.max_content_id += 1;
+	var _contents = this.state.contents.concat(
+		{id:this.max_content_id, title:_title, desc:_desc}
+	);
+	this.setState({
+		contents:_contents
+	});
+}.bind(this)}></UpdateContent>
+}
+```
 
++ UpdateContent 컴포넌트 내에서 각 input 에 title 과 desc 의 값을 불러옴
+
+```jsx
+constructor(props){
+    super(props);
+    this.state = {
+      title:this.props.data.title,
+      desc:this.props.data.desc
+    }
+    this.inputFormHandler = this.inputFormHandler.bind(this);
+  }
+  inputFormHandler(e){
+    this.setState({[e.target.name]:e.target.value});
+  }
+
+<p>
+	<input 
+		type="text" 
+		name="title" 
+		placeholder='title'
+		value={this.state.title} // props 는 read only 이기 때문에 state 로 받아야 함
+		onChange={this.inputFormHandler}
+        /* onChange={function(e){
+            this.setState({title:e.target.value});
+        }.bind(this)} */
+	></input>
+</p>
+<textarea 
+	name="desc" 
+	placeholder='description'
+	value={this.state.desc}
+	onChange={this.inputFormHandler}
+></textarea>
+```
+
++ Form 에 hidden 타입을 가진 input 을 추가하고 state 에 id 값도 추가
+
+```jsx
+<input type="hidden" name="id" value={this.state.id}></input>
+```
+
++ Array.from 으로 복제 후 선택된 id 값에 맞는 contents 를 수정
+
+```jsx
+else if(this.state.mode === 'update'){
+      _content = this.getReadContent();
+      _article = <UpdateContent data={_content} onSubmit={
+        function(_id, _title, _desc){
+          var _contents = Array.from(this.state.contents);
+          var i = 0;
+          while(i < _contents.length){
+            if(_contents[i].id === _id) {
+              _contents[i] = {id:_id, title:_title, desc:_desc};
+              break;
+            }
+            i = i + 1;
+          }
+        this.setState({
+          contents:_contents,
+          mode:'read'
+        });
+      }.bind(this)}></UpdateContent>
+    }
+```
 
