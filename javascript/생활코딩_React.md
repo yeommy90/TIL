@@ -10,12 +10,14 @@
   react-app directory 만들기
   cd /경로
   create-react-app . // 현재 폴더를 root로
-  ```
-
-+ visual studio code 실행
-
-  ```
   npm run start / ctrl+c
+  ```
+
+  ```jsx
+  node.js 설치
+  react-app directory 만들기
+  npx create-react-app . // 현재 폴더를 root로
+  npm start
   ```
 
 + src > App.js
@@ -38,10 +40,9 @@
 
 + 배포하기
 
-  ```
+  ```jsx
   npm run build
-  npm install -g serve
-  npx serve -s build
+  npx serve -s build // 사용자가 어떤 경로로 들어오더라도 index.html 을 서비스함
   ```
 
 
@@ -494,3 +495,10 @@ else if(this.state.mode === 'update'){
     }
 ```
 
+<br>
+
+<br>
+
+### React Delete
+
++ 
