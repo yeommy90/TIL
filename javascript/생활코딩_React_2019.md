@@ -55,6 +55,7 @@
 + 태그의 속성을 이용해 효율적인 컴포넌트 제작 가능
 
 ```jsx
+// Subject.js
 class Subject extends Component {
 	render() {
 		return (
@@ -70,6 +71,8 @@ class Subject extends Component {
 	}
 }
 
+
+// App.js
 class App extends Component {
     render() {
         return (
