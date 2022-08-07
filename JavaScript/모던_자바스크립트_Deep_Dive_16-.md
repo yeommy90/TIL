@@ -903,9 +903,17 @@ const obj = {
 ### 19.12 정적 프로퍼티/메서드
 
 + 정적 프로퍼티/메서드 : 생성자 함수로 인스턴스를 생성하지 않아도 참조/호출할 수 있는 프로퍼티/메서드
-+ Object.create 메서드는 정적 메서드로 생성자 함수가 생성한 객체로 호출할 수 없다.
++ Object.create 메서드는 정적 메서드로 생성자 함수가 생성한 객체(인스턴스)로 호출할 수 없다.
++ 생성자 함수에 프로토타입을 추가하고 프로토타입 메서드를 호출하려면 인스턴스를 생성해야 하는데 정적 메서드는 인스턴스를 생성하지 않아도 호출할 수 있다.
++ 종류 : is, isEtentsible, isFrozen, isSealed, keys, preventExtensions 등
++ 특정 클래스의 인스턴스가 아닌 전체에 필요한 기능을 만들 때 사용해, 프로그램의 응집도를 높일 수 있다.
 
 ```javascript
+const obj = Object.create({ name: 'Kim'});
+
+obj.hasOwnProperty('name'); // false
+// 정적 메서드는 인스턴스화 되면 호출할 수 없다.
+
 function Foo() {}
 
 Foo.prototype.x = function(){
@@ -1055,6 +1063,530 @@ name Kim
 address Suwon
 */
 ```
+
+<br>
+
+<br>
+
+<br>
+
+# 20장 strict mode
+
+### 20.1 strict mode 란?
+
++ 잠재적인 오류를 발생시키기 어려운 개발 환경을 만들고 그 환경에서 개발하는 것이 안전하다.
++ 린트 도구 : 정적 분석 기능을 통해 소스코드를 실행하기 전에 문법적 오류와 잠재적 오류를 찾아내고 원인을 리포팅해주는 도구
++ ES6 에서 도입된 클래스와 모듈은 기본적으로 strict mode 가 적용된다.
+
+<br>
+
+### 20.2 strict mode 의 적용
+
++ 스코프의 선두에 'use strict'; 를 추가한다.
++ 선두에 추가하지 않으면 제대로 동작하지 않는다.
+
+```javascript
+// 전역에 추가하는 예
+'use strict';
+
+function foo() {
+	x = 10; // ReferenceError
+}
+foo();
+
+
+// 함수 코드 내에 추가하는 예
+function foo() {
+    'use strict';
+    
+    x = 10; // ReferenceError
+}
+foo();
+```
+
+<br>
+
+### 20.3 사용 범위
+
++ 전역에 적용한 strict mode 는 스크립트 단위로 적용되고, 오류를 발생시킬 수 있다.
++ 함수 단위로 적용한 strict mode 는 외부 참조시 구분하기 어렵기 때문에 오류를 발생시킬 수 있다.
++  즉시 실행 함수로 스크립트 전체를 감싸서 스코프를 구분한다.
+
+<br>
+
+### 20.4 strict mode 가 발생시키는 에러
+
++ 암묵적 전역 : 선언하지 않은 변수를 참조하면 ReferenceError 가 발생한다.
++ 변수, 함수, 매개변수의 삭제 : delete 연산자로 삭제하면 SyntaxError 가 발생한다.
++ 매개변수 이름의 중복 : 매개변수 이름을 중복해 사용하면 SyntaxError 가 발생한다.
++ with 문의 사용 : with 문은 전달된 객체를 스코프 체인에 추가한다. 동일한 객체의 프로퍼티를 반복해서 사용할 때 이름을 생략할 수 있어서 간편하지만 사용하지 않는 것이 좋다.
++ 변수를 꼭 선언하고, delete 연산자를 사용하지 않고, 매개변수 이름을 중복하지 않고, with 문 사용을 피하자.
+
+<br>
+
+<br>
+
+<br>
+
+# 21장 빌트인 객체
+
+### 21.1 표준 빌트인 객체
+
++ Object, String, Number, Boolean, Symbol, Date, Math, RegExp, Array, Map/Set, WeakMap/WeakSet, Function, Promise, Reflect, Proxy, JSON, Error 등 40 여개
++ 생성자 함수 객체 : 프로토타입 메서드와 정적 메서드를 제공
++ Math, Reflect, JSON : 정적 메서드만 제공
+
+```javascript
+// Stirng 생성자 함수에 의한 String 객체 생성
+// strObj 인스턴스의 프로토타입은 String.prototype 이다.
+const strObj = new String('Kim'); // String {"Kim"}
+console.log(typeof strObj); // object
+console.log(Object.getPrototypeOf(strObj) === String.prototype); // true
+```
+
+<br>
+
+### 21.2 원시값과 래퍼 객체
+
++ 원시값은 객체가 아니므로 프로퍼티나 메서드를 가질 수 없는데도 원시값인 문자열이 마치 객체처럼 동작한다.
++ 원시값에 대해 객체처럼 마침표 표기법으로 접근하면 자바스크립트 엔진이 일시적으로 원시값을 연관된 객체를 생성해 생성된 객체로 프로퍼티에 접근하거나 메서드를 호출하고 다시 원시값으로 되돌린다.
++ 래퍼 객체 (wrapper object) : 문자열, 숫자, 불리언 값에 대해 객체처럼 접근하면 생성되는 임시 객체
++ 문자열, 숫자, 불리언, 심벌은 암묵적으로 생성되는 래퍼 객체에 의해 마치 객체처럼 사용할 수 있으며 표준 빌트인 객체의 프로토타입 메서드 또는 프로퍼티를 참조할 수 있다.
++ new 연산자와 함께 String, Number, Boolean 생성자 함수를 호출해 인스턴스를 생성할 필요가 없다.
++ null, undefined 는 래퍼 객체를 생성하지 않아서 객체처럼 사용하면 안된다.
+
+```javascript
+const str = 'hello';
+
+// 원시 타입인 문자열이 래퍼 객체인 String 인스턴스로 변환된다.
+console.log(str.length); // 5
+console.log(str.toUpperCase()); // HELLO
+
+// 래퍼 객체로 프로퍼티에 접근하거나 메서드를 호출한 후 다시 원시값으로 되돌린다.
+console.log(typeof str); // string
+```
+
+<br>
+
+### 21.3 전역 객체
+
++ 전역 객체 : 코드가 실행되기 이전 단계에 자바스크립트 엔진에 의해 어떤 객체보다도 먼저 생성되는 특수한 객체이며 어떤 객체에도 속하지 않은 최상위 객체
++ 전역 객체는 개발자가 의도적으로 생성할 수 없고 전역 객체의 프로퍼티를 참조할 때 생략할 수 있다.
++ 브라우저 환경에서는 window 또는 self, this, frames / Node.js 환경에서는 global
++ ES11 에서 통일된 식별자인 globalThis 가 도입되었다.
+
++ var 키워드로 선언한 전역 변수와 선언하지 않은 변수에 값을 할당한 암묵적 전역, 전역 함수는 전역 객체의 프로퍼티가 된다.
+
+```javascript
+var foo = 1;
+console.log(window.foo); // 1
+
+bar = 2;
+console.log(window.bar); // 2
+
+function bax() { return 3; }
+console.log(window.baz()); // 3
+```
+
++ let 과 const 키워드로 선언한 전역 변수는 전역 객체의 프로퍼티가 아닌, 전역 렉시컬 환경의 선언적 환경 레코드 내에 존재한다.
+
+```javascript
+let foo = 1;
+console.log(window.foo); // undefined
+```
+
++ 암묵적 전역 : 선언하지 않은 식별자에 값을 할당하면 전역 객체의 프로퍼티가 된다. 변수 선언 없이 전역 객체의 프로퍼티로 추가된 프로퍼티는 변수가 아니므로 변수 호이스팅이 발생하지 않는다. delete 로 삭제할 수 있다.
+
+```javascript
+console.log(x); // undefined
+console.log(y); // ReferenceError
+
+var x = 1;
+
+function foo() {
+	y = 2; // 변수 선언 없이 전역 객체의 프로퍼티로 추가되었기 때문에 호이스팅이 발생하지 않는다.
+}
+foo();
+
+console.log(x + y); // 3
+
+delete y; // 프로퍼티는 삭제된다.
+delete x; // 전역 변수는 삭제되지 않는다.
+```
+
+#### 21.3.1 빌트인 전역 프로퍼티
+
++ Infinity : 무한대
+
++ NaN : Not-a-Number
+
+```javascript
+console.log(window.NaN); // NaN
+console.log(Number('xyz')); // NaN
+console.log(typeof NaN); // number
+```
+
++ undefined
+
+```javascript
+console.log(typeof undefined); // undefined
+```
+
+#### 21.3.2 빌트인 전역 함수 (전역 객체의 메서드)
+
++ eval : 자바스크립트 코드를 나타내는 문자열을 인수로 전달받는다. 사용자로부터 입력받은 콘텐츠를 실행하는 것은 보안에 매우 취약하며, 자바스크립트 엔진에 의해 최적화가 수행되지 않으므로 일반적인 코드 실행에 비해 속도가 느리다. 사용금지!
++ isFinite : 전달받은 인수가 유한수이면 true, 무한수이면 false 를 반환한다. 숫자가 아닌 경우 숫자로 타입 변환한 후 검사하고 인수가 NaN 로 평가된다면 false 를 반환한다.
+
+```javascript
+isFinite(0); // true
+isFinite('10'); // true
+isFinite(null); // true (null = 0)
+isFinite('Hello'); // false
+```
+
++ isNaN : 전달받은 인수가 NaN 인지 검사해 NaN 이면 true, 숫자이면 false 를 반환한다. 인수 타입이 숫자가 아닌 경우 숫자로 타입 변환 한다.
+
+```javascript
+isNaN(NaN); // true
+isNaN('ten'); // true
+isNaN(undefined); // true
+isNaN({}); // true
+
+isNaN(10); // false
+isNaN('1557'); // false
+isNaN(' '); // false (공백은 0)
+isNaN(true); // false
+```
+
++ parseFloat : 전달받은 문자열 인수를 부동 소수점 숫자, 즉 실수로 해석해 반환한다.
+
+```javascript
+parseFloat('3.14'); // 3.14
+parseFloat('90 3 26'); // 90
+parseFloat('Hello world 99'); // NaN
+
+// 공백으로 구분된 문자열은 첫번째만 변환한다.
+// 첫번째 문자를 변환할 수 없다면 NaN 를 반환한다.
+```
+
++ parseInt : 전달받은 문자열 인수를 정수로 해석해 반환한다.
+
+```javascript
+parseInt('10'); // 10
+
+// 10을 2진수로 해석하고 결과를 10진수 정수로 반환한다.
+parseInt('10', 2); // 2
+parseInt('10', 8); // 8
+
+// 첫번째 인수로 전달한 문자열의 첫 문자가 숫자로 변환될 수 없다면 NaN 를 반환한다.
+parseInt('20', 2); // NaN
+// 두번째 문자부터 해당 진수가 아닌 문자라면 무시되고 해석된 정수값만 반환한다.
+parseInt('102', 2); // 2
+
+// 10진수 숫자를 해당 기수의 문자열로 변환해 반환하고 싶을 경우
+const x = 15;
+x.toString(2); // '1111'
+parseInt(x.toString(2), 2); // 15
+```
+
++ encodeURI / decodeURI
++ encodeURIComponent / decodeURIComponent
+
+<br>
+
+<br>
+
+<br>
+
+# 22장 this
+
+### 22.1 this 키워드
+
++ this : 자신이 속한 객체 또는 자신이 생성할 인스턴스를 가리키는 자기 참조 변수다. this 를 통해 자신이 속한 객체 또는 생성할 인스턴스의 프로퍼티나 메서드를 참조할 수 있다.
+
+```javascript
+function Circle(radius) {
+	this.radius = radius;
+}
+// this 는 생성자 함수가 생성할 인스턴스를 가리킨다.
+
+Circle.prototype.getDiameter = function() {
+	return 2 * this.radius;
+};
+// this 는 생성자 함수가 생성할 인스턴스를 가리킨다.
+
+const circle = new Circle(5);
+console.log(circle.getDiameter()); // 10
+```
+
++ this 바인딩은 함수 호출 방식에 의해 동적으로 결정된다.
++ 하지만 this 는 객체의 메서드 내부 또는 생성자 함수 내부에서만 의미가 있다.
+
+```javascript
+console.log(this); // window
+
+function square(number) {
+	console.log(this); // window
+	return number * number;
+}
+square(2);
+// 일반 함수 내부에서 this 는 전역 객체를 가리킨다. 
+
+const person = {
+	name: 'Kim',
+	getName() {
+		console.log(this); // person 객체를 가리킨다.
+		return this.name;
+	}
+};
+console.log(person.getName());
+
+// this 는 함수가 호출되는 방식에 따라 this 바인딩이 동적으로 결정된다.
+```
+
+<br>
+
+### 22.2 함수 호출 방식과 this 바인딩
+
++ this 바인딩은 함수가 어떻게 호출되었는지에 따라 동적으로 결정된다.
+
+#### 22.2.1 일반 함수 호출
+
++ 전역 함수나 중첩 함수, 콜백 함수를 일반 함수로 호출하면 함수 내부의 this 에는 전역 객체가 바인딩된다. 
+
+```javascript
+function foo() {
+	console.log("foo's this: ", this); // window
+	function bar() {
+		console.log("bar's this: ", this); // window
+	}
+	bar();
+}
+foo();
+```
+
++ strict mode 가 적용된 상태에서는 undefined 가 바인딩된다.
+
+```javascript
+function foo() {
+	'use strict';
+	
+	console.log("foo's this: ", this); // undefined
+}
+foo();
+```
+
++ 메서드 내에서 정의한 중첩 함수 또는 메서드에게 전달한 콜백 함수가 일반 함수로 호출될 때 this 가 전역 객체를 바인딩하는 것은 문제가 있다. 외부 함수인 메서드와 중첩 함수 또는 콜백 함수의 this 가 일치하지 않는다는 것은 중첩 함수나 콜백 함수를 헬퍼 함수로 동작하기 어렵게 만든다.
++ 메서드 내부의 중첩 함수나 콜백 함수의 this 바인딩을 메서드의 this 바인딩과 일치시키기 위해서는 function.prototype.bind 메서드를 이용한다.
+
+```javascript
+var value = 1;
+
+const obj = {
+	value: 100,
+	foo() {
+		setTimeout(function() {
+			console.log(this.value);
+		}.bind(this),100);
+	}
+};
+obj.foo();
+
+// obj 객체의 메서드로서 foo 함수를 호출한 것
+// bind 메서드를 이용하면 콜백 함수의 this 바인딩이 전역 객체를 가리키지 않는다.
+```
+
+#### 22.2.2 메서드 호출
+
++ 메서드 내부의 this 는 메서드를 소유한 객체가 아닌 메서드를 호출한 객체에 바인딩 된다.
+
+```javascript
+const person = {
+	name: 'Kim',
+	getName() {
+		return this.name;
+	}
+};
+
+console.log(person.getName()); // Kim
+
+const anotherPerson = {
+	name: 'Lee'
+};
+
+anotherPerson.getName = person.getName;
+
+console.log(anotherPerson.getName()); // Lee
+// getName 메서드를 소유한 person 이 아닌 호출한 anotherPerson 에 바인딩 되었다.
+```
+
++ 프로토타입 메서드 내부에서 사용된 this 도 일반 메서드처럼 해당 메서드를 호출한 객체에 바인딩 된다.
+
+```javascript
+function Person(name) {
+	this.name = name;
+}
+
+Person.prototype.getName = function() {
+	return this.name;
+};
+
+const me = new Person('Kim');
+console.log(me.getName()); // Kim
+
+Person.prototype.name = 'Lee';
+console.log(Person.prototype.getName()); // Lee
+```
+
+#### 22.2.3 생성자 함수 호출
+
++ 생성자 함수 내부의 this 에는 생성자 함수가 생성할 인스턴스가 바인딩 된다.
++ new 연산자와 함께 호출하지 않으면 일반 함수로 동작해 전역 객체를 가리킨다.
+
+```javascript
+function Circle(radius) {
+	this.radius = radius;
+    this.getDiameter = function () {
+        return 2 * this.radius;
+    };
+}
+// this 는 생성자 함수가 생성할 인스턴스를 가리킨다.
+
+const circle = new Circle(5);
+console.log(circle.getDiameter()); // 10
+```
+
+#### 22.2.4 Function.prototype.apply/call/bind 메서드에 의한 간접 호출
+
+<br>
+
+<br>
+
+<br>
+
+# 23장 실행 컨텍스트
+
+### 23.1 소스코드의 타입
+
++ 전역 코드 -> 전역 실행 컨텍스트
++ 함수 코드 -> 함수 실행 컨텍스트
++ 모듈 코드 -> 모듈 실행 컨텍스트
+
+### 23.2 소스코드의 평가와 실행
+
++ 소스코드의 평가 : 실행 컨텍스트를 생성하고 변수, 함수 등의 선언문만 먼저 실행해 생성된 변수나 함수 식별자를 키로 실행 컨텍스트가 관리하는 스코프에 등록한다.
++ 소스코드의 실행 : 런타임이 시작되고 소스코드 실행에 필요한 정보, 즉 변수나 함수의 참조를 실행 컨텍스트가 관리하는 스코프에서 검색해 취득한다. 그리고 변수 값의 변경 등 소스코드의 실행 결과는 다시 실행 컨텍스트가 관리하는 스코프에 등록된다.
+
+```javascript
+var x;
+x = 1;
+
+// 소스코드의 평가 : x 는 실행 컨텍스트가 관리하는 스코프에 등록되고 undefined 로 초기화된다.
+// 소스코드의 실행 : x 변수가 선언된 변수인지 실행 컨텍스트가 관리하는 스코프에서 확인하고, 값을 할당해 할당 결과를 실행 컨텍스트에 등록한다.
+```
+
+### 23.3 실행 컨텍스트의 역할
+
+```javascript
+const x = 1;
+const y = 2;
+
+function foo(a) {
+	const x = 10;
+	const y = 20;
+	console.log(a + x + y); // 130
+}
+
+foo(100);
+
+console.log(x + y); // 3
+
+/* 
+1. 전역 코드 평가 : 전역 코드를 실행하기 위해 선언문이 먼저 실행되고 생성된 전역 변수와 전역 함수가 실행 컨텍스트가 관리하는 전역 스코프에 등록된다. 
+2. 전역 코드 실행 : 런타임이 시작되고 전역 변수에 값이 할당되고 함수가 호출된다. 함수가 호출되면 전역 코드의 실행을 중단하고 실행 순서를 변경해 함수 내부로 진입한다.
+3. 함수 코드 평가 : 함수 코드 실행 준비를 위해 매개변수와 지역 변수 선언문이 실행되고 매개변수와 지역 변수가 실행 컨텍스트가 관리하는 지역 스코프에 등록된다. 함수 내부에서 arguments 객체가 생성되어 지역 스코프에 등록되고 this 바인딩도 결정된다.
+4. 함수 코드 실행 : 런타임이 시작되고 함수 코드가 실행 된다. console.log 메서드를 호출하기 위해 스코프 체인을 통해 검색하고 전역 객체의 프로퍼티이기 때문에 전역 스코프를 통해 검색된다. console.log 메서드가 종료되면 함수 코드 실행 과정이 종료되고 함수 호출 이전으로 돌아가 전역 코드 실행을 계속한다. 
+*/
+```
+
++ 코드가 실행되려면 스코프를 구분해 식별자와 바인딩된 값이 관리되어야 한다. 중첩 관계에 의해 스코프 체인을 형성해 식별자를 검색할 수 있어야 하고, 전역 객체의 프로퍼티도 전역 변수처럼 검색할 수 있어야 한다.
++ 실행 컨텍스트 : 소스코드를 실행하는데 필요한 환경을 제공하고 코드의 실행 결과를 실제로 관리하는 영역이며 식별자를 등록하고 관리하는 스코프와 코드 실행 순서 관리를 구현한 내부 매커니즘으로 모든 코드는 실행 컨텍스트를 통해 실행되고 관리된다.
++ 렉시컬 환경 (식별자와 스코프) / 실행 컨텍스트 스택 (코드 실행 순서)
+
+### 23.4 실행 컨텍스트 스택
+
++ 코드가 실행되는 시간의 흐름에 따라 실행 컨텍스트 스택에 실행 컨텍스트가 추가(push) 되고 제거(pop) 된다.
++ Running execution context : 실행 컨텍스트 스택의 최상위에 존재하는 실행 컨텍스트
+
+### 23.5 렉시컬 환경
+
++ 렉시컬 환경 : 식별자와 식별자에 바인딩된 값, 상위 스코프에 대한 참조를 기록하는 자료구조로 실행 컨텍스트를 구성하는 컴포넌트다. 또한 스코프를 구분해 식별자를 등록하고 관리하는 저장소 역할을 하는 렉시컬 스코프의 실체다.
+  - 환경 레코드 (Environment Record) : 스코프에 포함된 식별자를 등록하고 식별자에 바인딩된 값을 관리하는 저장소
+  - 외부 렉시컬 환경에 대한 참조 (Outer Lexical Environment Reference) : 해당 실행 컨텍스트를 생성한 소스코드를 포함하는 상위 코드의 렉시컬 환경, 즉 상위 스코프를 말한다.
+
+### 23.6 실행 컨텍스트의 생성과 식별자 검색 과정
+
+```javascript
+var x = 1;
+const y = 2;
+
+function foo(a) {
+	var x = 3;
+	const y = 4;
+	
+	function bar(b) {
+		const z = 5;
+		console.log(a + b + x + y + z);
+	}
+	bar(10);
+}
+
+foo(20); // 42
+```
+
+#### 23.6.1 전역 객체 생성
+
++ 전역 코드가 평가되기 전 전역 객체가 생성되고 빌트인 전역 프로퍼티, 빌트인 전역 함수, 표준 빌트인 객체가 추가된다. 프로토타입 체인의 일원으로 Object.prototype 을 상속받는다.
+
+#### 23.6.2 전역 코드 평가
+
++ 전역 실행 컨텍스트 생성 : 전역 실행 컨텍스트를 생성해 실행 컨텍스트 스택에 푸시한다.
++ 전역 렉시컬 환경 생성 : 전역 렉시컬 환경을 생성하고 전역 실행 컨텍스트에 바인딩한다.
+  - 전역 환경 레코드 생성
+    - 객체 환경 레코드 생성 : var 키워드로 선언한 전역 변수와 함수 선언문으로 정의한 전역 함수, 빌트인 전역 프로퍼티와 빌트인 전역 함수, 표준 빌트인 객체를 관리한다. BindingObject 라고 부르는 객체와 연결되어 전역 객체의 프로퍼티와 메서드가 된다.
+    - 선언적 환경 레코드 생성 : let, const 키워드로 선언한 전역 변수를 관리한다. 개념적인 블록 내에 존재하며 런타임에 실행 흐름이 변수 선언문에 도달하기 전까지 일시적 사각지대 (TDZ) 에 빠지게 된다.
+  - this 바인딩 : 전역 환경 레코드와 함수 환경 레코드에만 존재한다.
+  - 외부 렉시컬 환경에 대한 참조 : 상위 스코프를 가리키며 평가중인 코드가 전역 코드일때는 null 이 할당된다.
+
+#### 23.6.3 전역 코드 실행
+
++ 전역 코드가 실행되기 시작하고 변수 할당문이 실행되어 변수 x, y 에 값이 할당된다. foo 함수가 호출되면 실행 컨텍스트의 렉시컬 환경의 환경 레코드에서 식별자를 검색한다. 전역 렉시컬 환경에서 검색할 수 없다면 참조 에러를 발생시킨다.
+
+#### 23.6.4 foo 함수 코드 평가
+
++ 함수 실행 컨텍스트 생성 : 함수 렉시컬 환경이 완성된 다음 함수 실행 컨텍스트는 실행 컨텍스트에 푸시된다.
++ 함수 렉시컬 환경 생성 : 함수 렉시컬 환경을 생성하고 foo 함수 실행 컨텍스트에 바인딩한다.
+  - 함수 환경 레코드 생성 : 매개변수, arguments 객체, 함수 내부에서 선언한 지역 변수와 중첩 함수를 등록하고 관리한다.
+  - this 바인딩 : foo 함수는 일반 함수로 호출되었으므로 this 는 전역 객체를 가리킨다. [[ThisValue]] 내부 슬롯에 전역 객체가 바인딩된다.
+  - 외부 렉시컬 환경에 대한 참조 : foo 함수는 전역 코드에 정의된 전역 함수로, 외부 렉시컬 환경에 대한 참조에는 전역 렉시컬 환경의 참조가 할당된다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

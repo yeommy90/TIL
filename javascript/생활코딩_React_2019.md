@@ -292,7 +292,7 @@ render() {
     }
     return (
       <div className="App">
-        <TOC 
+        <TOC>
           onChangePage={function(id){
             this.setState({
               mode:'read',
