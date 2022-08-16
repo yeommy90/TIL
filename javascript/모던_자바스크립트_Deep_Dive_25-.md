@@ -567,31 +567,207 @@ console.log(sum(null)); // null
 
 # 27장 배열
 
-### 27.1 배열
+### 27.1 배열이란?
 
++ 배열 : 여러 개의 값을 순차적으로 나열한 자료구조, 객체 타입
++ 요소 : 배열이 가지고 있는 값, 원시값, 객체, 함수, 배열 등 자바스크립트에서 값으로 인정하는 모든 것이 가능
++ 배열은 인덱스와 length 프로퍼티를 갖기 때문에 for 문을 통해 순차적으로 요소에 접근할 수 있다.
 
+<br>
 
+### 27.2 자바스크립트 배열은 배열이 아니다
 
++ 일반적인 의미의 배열 : 각 요소가 동일한 데이터 크기를 가지며 빈틈없이 연속적으로 이어져 있으므로 인덱스를 통해 단 한번의 연산으로 임의의 요소에 접근할 수 있다. 이는 매우 효율적이고 고속으로 동작한다.
++ 자바스크립트의 배열 : 요소를 위한 각각의 메모리 공간은 동일한 크기를 갖지 않아도 되고, 연속적으로 이어져 있지 않을 수도 있다. (희소 배열)
++ 자바스크립트의 배열은 일반적인 배열의 동작을 흉내 낸 특수한 객체다. 인덱스를 나타내는 문자열을 프로퍼티 키로, 배열의 요소를 프로퍼티 값으로 가진다. 
++ 일반적인 배열은 인덱스로 요소에 빠르게 접근 가능하지만 요소를 삽입/삭제 하는 경우에는 효율적이지 않다.
++ 자바스크립트의 배열은 해시 테이블로 구현된 객체이므로 인덱스로 접근하는 경우 성능적인 면에서 느릴수 밖에 없는 구조적인 단점이 있지만 요소를 삽입/삭제하는 경우에는 일반적인 배열보다 빠르다!
 
+<br>
 
+### 27.3 length 프로퍼티와 희소 배열
 
++ length 프로퍼티의 값은 0~2^32-1 (4,294,967,296-1) 미만의 양의 정수다.
++ length 프로퍼티의 값은 배열에 요소를 추가하거나 삭제하면 자동 갱신된다.
 
+```javascript
+const arr = [1,2,3];
+console.log(arr.length); // 3
 
+arr.push(4);
+console.log(arr.length); // 4
 
+arr.pop();
+console.log(arr.length); // 3
+```
 
++ 현재 length 프로퍼티 값보다 작은 값을 할당하면 배열의 길이가 줄어든다.
 
+```javascript
+const arr = [1,2,3,4,5];
 
+arr.length = 3;
 
+console.log(arr); // [1,2,3]
+```
 
++ 현재 length 프로퍼티 값보다 큰 값을 할당하면 값은 변경되지만 실제로 늘어나지는 않는다.
++ 자바스크립트는 희소 배열을 문법적으로 허용하지만 배열의 기본적인 개념인 연속적인 값의 집합에 맞지 않으며 성능에도 안 좋은 영향을 준다.
 
+```javascript
+const arr = [1];
+arr.length = 3;
+console.log(arr.length); // 3
+console.log(arr); // [1, empty*2]
 
+// 값 없이 비어 있는 요소를 위해 메모리 공간을 확보하지 않으며 빈 요소를 생성하지도 않는다.
+```
 
+<br>
 
+### 27.4 배열 생성
 
+#### 27.4.1 배열 리터럴
 
++ 0개 이상의 요소를 쉼표로 구분해 대괄호로 묶는다.
 
+```javascript
+const arr = [1,2,3];
+console.log(arr.length); // 3
 
+const arr = [1, ,3];
+console.log(arr.length); // 3
+console.log(arr); // [1, empty, 3]
+console.log(arr[1]); // undefined
 
+// 객체 arr 에 프로퍼티 키가 [1] 인 프로퍼티는 존재하지 않기 때문에 undefined 다.
+```
+
+#### 27.4.2 Array 생성자 함수
+
++ Array 생성자 함수는 전달된 인수의 개수에 따라 다르게 동작한다.
++ Array 생성자 함수는 new 연산자와 함께 호출하지 않더라도 배열을 생성하는 생성자 함수로 동작한다. 함수 내부에서 new.target 을 확인한다.
+
+```javascript
+// 1) 전달된 인수가 1개이고 숫자인 경우 -> 값이 없는 length 가 10 인 배열 생성
+const arr = new Array(10);
+console.log(arr); // [empty * 10]
+console.log(arr.length); // 10
+
+new Array(4294967296); // RangeError
+new Array(-1); // RangeError
+
+// 2) 전달된 인수가 없는 경우 빈 배열 생성
+new Array(); // []
+
+// 3) 전달된 인수가 2개 이상이거나 숫자가 아닌 경우 인수를 요소로 갖는 배열 생성
+new Array(1,2,3); // [1,2,3]
+new Array({}); // [{}]
+```
+
+#### 27.4.3 Array.of
+
++ 전달된 인수를 요소로 갖는 배열을 생성
+
+```javascript
+// 전달된 인수가 1개이고 숫자더라도 인수를 요소로 갖는 배열 생성
+Array.of(1); // [1]
+Array.of(1,2,3); // [1,2,3]
+Array.of('string'); // ['string']
+```
+
+#### 27.4.4 Array.from
+
++ 유사 배열 객체 또는 이터러블 객체를 인수로 전달받아 배열로 변환
+
+```javascript
+Array.from({length:2, 0:'a', 1:'b'}); // ['a','b']
+Array.from('Hello'); // ['H','e','l','l','o']
+
+// 두번째 인수로 전달한 콜백 함수를 통해 값을 만들면서 요소를 채울 수 있다.
+Array.from({length:3}); // [undefined,undefined,undefined]
+Array.from({length:3}, (_,i) => i); // [0,1,2]
+```
+
+<br>
+
+### 27.5 배열 요소의 참조
+
++ 배열의 요소를 참조할 때는 대괄호 표기법을 사용한다. 정수로 평가되는 표현식이라면 인덱스 대신 사용할 수 있다.
+
+```javascript
+const arr = [1,2];
+
+console.log(arr[0]); // 1
+console.log(arr[3]); // undefined
+```
+
+<br>
+
+### 27.6 배열 요소의 추가와 갱신
+
++ 배열에도 요소를 동적으로 추가할 수 있다.
+
+```javascript
+const arr = [0];
+
+arr[1] = 1;
+console.log(arr); // [0,1]
+
+arr[100] = 100;
+console.log(arr); // [0,1, empty*98, 100]
+
+arr[1] = 10;
+console.log(arr); // [0,10, empty*98, 100]
+
+/*
+1) 존재하지 않는 인덱스를 사용해 값을 할당하면 새로운 요소가 추가되고 length 프로퍼티 값은 자동 갱신된다.
+2) 현재 배열의 length 프로퍼티 값보다 큰 인덱스로 새로운 요소를 추가하면 희소 배열이 된다.
+3) 이미 요소가 존재하는 요소에 값을 재할당하면 값이 갱신된다.
+```
+
++ 인덱스는 반드시 0 이상의 정수 또는 정수 형태의 문자열을 사용해야 한다. 그렇지 않으면 프로퍼티가 생성된다. length 프로퍼티 값에도 영향을 주지 않는다.
+
+```javascript
+const arr = [];
+
+arr[0] = 1;
+arr['1'] = 2;
+
+arr['foo'] = 3;
+arr.bar = 4;
+arr[1.1] = 5;
+arr[-1] = 6;
+
+console.log(arr); // [1,2, foo:3, bar:4, '1.1':5, '-1':6]
+console.log(arr.length); // 2
+```
+
+<br>
+
+### 27.7 배열 요소의 삭제
+
++ delete 연산자로 삭제가 가능하지만, 희소 배열이 되어 좋지 않으므로 Array.prototype.splice 메서드를 사용한다.
+
+```javascript
+const arr = [1,2,3];
+
+delete arr[1];
+console.log(arr); // [1, empty, 3]
+console.log(arr.length); // 3
+
+const arr = [1,2,3]
+
+arr.splice(1,1);
+console.log(arr); // [1,3]
+console.log(arr.length); // 2
+
+// Array.prototype.splice(삭제를 시작할 인덱스, 삭제할 요소 수)
+```
+
+<br>
+
+### 27.8 배열 메서드
 
 
 
