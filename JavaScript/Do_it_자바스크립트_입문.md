@@ -1,6 +1,6 @@
 > Do it! 자바스크립트 입문, 고경희
 
-
+<br>
 
 # Do it! 자바스크립트 입문
 
@@ -16,7 +16,7 @@
   - 여러줄 주석 : /* 줄바꿈 */
 + 예약어 사용 주의
 
-
+<br>
 
 ## 03. 변수와 자료형 그리고 연산자
 
@@ -40,7 +40,8 @@
 
   - 변수의 스코프는 최대한 좁게 만드는 것을 권장
 
-    
+
+<br>
 
 ###  03-2 자료형 이해하기
 
@@ -48,7 +49,7 @@
 + Strong Data Type Check : 자료형을 미리 지정 후 값을 할당 (C, java)
 + Typescript : 자바스크립트에 강한 유형을 추가
 
-
+<br>
 
 ### 03-3 연산자 이해하기
 
@@ -56,7 +57,7 @@
   - a++ : 전체 수식의 처리가 끝난 다음 적용
   - ++a : 전체 수식을 처리하기 전에 적용
 
-
+<br>
 
 ## 04. 제어문
 
@@ -65,7 +66,7 @@
 + 조건 ? true : false
 + truthy / falsy (0, 공백, null, undefined)
 
-
+<br>
 
 ### 04-2 switch문
 
@@ -83,29 +84,29 @@
   }
   ```
 
-
+<br>
 
 ### 04-3  for문
 
 + 초기값이 있으면서 일정한 간격으로 반복할 때 사용
 
-
+<br>
 
 ### 04-5 while, do~while문
 
 + while : 조건부터 확인 / 조건에 맞지 않을 경우 명령을 실행하지 않음
 + do~while : 일단 실행하고 조건을 확인 / 일단 실행한 후 상황에 따라 반복
 
-
+<br>
 
 ### 04-6 break문, continue문
 
 + break : 반복문의 흐름에서 바로 빠져나올때
 + continue : 다음 명령을 건너뛸때
 
+<br>
 
-
-
+<br>
 
 ## 05. 함수와 이벤트
 
@@ -134,7 +135,7 @@
 
 + for문에서 사용할 경우 블록 변수를 사용하는 것이 좋다.
 
-
+<br>
 
 ### 05-4 함수 표현식
 
@@ -155,7 +156,7 @@
 + 함수 선언 -> 함수 호출 반드시 해야함!!!!
 + return : 함수 실행 후 결과값을 함수 호출한 위치로 넘기는 것
 
-
+<br>
 
 ### 05-5 이벤트 다루기
 
@@ -168,7 +169,9 @@
   }
   ```
 
+<br>
 
+<br>
 
 ## 06. 객체
 
@@ -190,7 +193,7 @@
   // new 예약어로 Date 객체의 인스턴스를 만들고 now 변수에 저장
   ```
 
-
+<br>
 
 ### 06-2 사용자 정의 객체
 
@@ -223,7 +226,7 @@
 
   - 객체 생성자 : Book (첫글자 대문자로 시작)
 
-
+<br>
 
 ### 06-3 Date 객체
 
@@ -235,9 +238,10 @@
   now.setDate(now.getDate() + 50)
   ```
 
-  
 
+<br>
 
+<br>
 
 ## 07. Array
 
@@ -246,7 +250,7 @@
 + 여러 개의 항목을 하나의 변수에 저장해야 할때 사용
 + for문 사용시 인덱스 값을 0부터 'length값 -1' 까지 지정
 
-
+<br>
 
 ### 07-2 Array 객체 함수
 
@@ -316,9 +320,10 @@
   // 원래 배열은 변경되지 않음
   ```
 
-  
 
+<br>
 
+<br>
 
 ## 08. 문서 객체 모델 (DOM)
 
@@ -326,7 +331,7 @@
 
 + 웹 문서의 모든 요소를 자바스크립트를 이용해 조작할 수 있도록 객체를 사용해 문서를 해석하는 방법
 
-
+<br>
 
 ### 08-2 DOM 요소에 접근하기
 
@@ -350,9 +355,7 @@ document.addEventListener("click", function() {
 });
 ```
 
-
-
-
+<br>
 
 ### 08-3 웹요소의 태그 속성 가져와서 수정하기
 
@@ -363,18 +366,14 @@ document.addEventListener("click", function() {
 document.queryselector("#prod-img > img").setAttribute("src", "이미지 경로") // 선택한 ID값의 src 속성을 변경
 ```
 
-
-
-
+<br>
 
 ### 08-5 웹요소의 스타일 수정하기
 
 + display:none : 요소가 차지하던 공간도 사라짐
 + visibility:hidden : 요소가 있던 공간이 빈 상태로 남음
 
-
-
-
+<br>
 
 ### 08-6 DOM에 요소 추가하기
 
@@ -393,7 +392,7 @@ attr.value = "accent" // class 속성 노드의 값
 newP.setAttributeNode(attr) // 요소 노드와 연결
 ```
 
-
+<br>
 
 ### 08-7 노드 순서 바꾸거나 삭제하기
 
@@ -413,9 +412,9 @@ var firstP = document.querySelectorAll("p")[0] // 위의 부모
 firstP.removeChild(firstDel) // 부모의 자식을 삭제...
 ```
 
+<br>
 
-
-
+<br>
 
 ## 09. 폼과 자바스크립트
 
@@ -432,13 +431,13 @@ document.forms[0].elements[0].value
 // 첫번째 폼의 첫번째 요소의 값, 선택자가 없을때
 ```
 
-
+<br>
 
 ### 09-2 폼 요소에서 입력값 검증하기
 
 + change 이벤트 : 필드에 입력을 마치고 빠져나올때 발생
 
-
+<br>
 
 ### 09-3 다양한 폼 요소 다루기
 
@@ -453,7 +452,9 @@ document.querySelector("#major").options[0].value
 // 첫번째 옵션이 서버로 넘겨주는 값 접근하기
 ```
 
+<br>
 
+<br>
 
 ## 10. 브라우저 객체 모델
 
@@ -461,7 +462,7 @@ document.querySelector("#major").options[0].value
 
 + 자바스크립트를 통해 브라우저 창을 관리할 수 있도록 브라우저 요소를 객체화해 놓은 것
 
-
+<br>
 
 ### 10-2 window 객체의 함수
 
@@ -483,7 +484,8 @@ document.querySelector("#major").options[0].value
   newWin.moveTo(0,0) // 왼쪽 위 모서리를 기준으로 이동
   ```
 
-  
+
+<br>
 
 ### 10-3 Navigator 객체
 
@@ -497,7 +499,7 @@ document.querySelector("#major").options[0].value
   navigator.userAgent
   ```
 
-
+<br>
 
 ### 10-4 그밖의 브라우저 객체
 
@@ -510,11 +512,10 @@ document.querySelector("#major").options[0].value
   <button onclick="location.replace('https://www.naver.com')">네이버</button>
   ```
 
-  
 
+<br>
 
-
-
+<br>
 
 ## 실전 프로젝트 
 
@@ -551,21 +552,6 @@ document.querySelector("#major").options[0].value
       showList();
   }
   ```
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
