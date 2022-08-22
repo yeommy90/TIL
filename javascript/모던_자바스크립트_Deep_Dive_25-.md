@@ -777,11 +777,52 @@ console.log(arr.length); // 2
 
 ### 27.8 배열 메서드
 
++ 자바스크립트는 배열을 다룰 때 유용한 빌트인 메서드를 제공하는데, 원본 배열을 직접 변경하는 메서드(mutator method)와 원본 배열을 변경하지 않고 새로운 배열을 생성해 반환하는 메서드(accessor method)가 있다.
++ 원본 배열을 직접 변경하는 메서드는 외부 상태를 직접 변경하는 부수 효과가 있으므로 가급적 원본 배열을 직접 변경하지 않는 메서드를 사용하는 편이 좋다.
 
+#### 27.8.1 Array.isArray
 
++ Array 생성자 함수의 정적 메서드로 Array.of, Array.from 도 정적 메서드에 속한다.
++ Array.isArray 메서드는 전달된 인수가 배열이면 true, 아니면 false를 반환한다.
 
+```javascript
+// true
+Array.isArray([]);
+Array.isArray([1,2]);
+Array.isArray(new Array());
 
+// false
+Array.isArray();
+Array.isArray({});
+Array.isArray(null);
+```
 
+#### 27.8.2 Array.prototype.indexOf
+
++ indexOf 메서드는 원본 배열에서 인수로 전달된 요소를 검색해 그 인덱스를 반환한다.
++ 중복되는 요소가 여러 개 있다면 첫번째로 검색된 요소의 인덱스를 반환한다.
++ 두번째 인수는 검색을 시작할 인덱스다.
++ 요소가 존재하지 않으면 -1 을 반환한다. 이것을 통해 특정 요소가 존재하는지 확인할 때 유용하다.
+
+```javascript
+const arr = [1, 2, 2, 3];
+
+arr.indexOf(2); // 1
+arr.indexOf(4); // -1
+arr.indexOf(2, 2); // 2
+```
+
++ ES7 에서 도입된 Array.prototype.includes 메서드를 사용하면 가독성이 더 좋다.
+
+```javascript
+const foods = ['apple', 'banana', 'grape'];
+
+if (!foods.includes('orange')) {
+	foods.push('orange');
+}
+
+console.log(foods); // ["apple", "banana", "grape", "orange"]
+```
 
 
 
