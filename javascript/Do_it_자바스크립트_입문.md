@@ -1,5 +1,3 @@
-> Do it! 자바스크립트 입문, 고경희
-
 <br>
 
 # Do it! 자바스크립트 입문
@@ -552,7 +550,6 @@ document.querySelector("#major").options[0].value
       showList();
   }
   ```
-
 
 
 
