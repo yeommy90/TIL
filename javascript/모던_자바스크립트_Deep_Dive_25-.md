@@ -121,14 +121,6 @@ me.sayHi(); // TypeError
 + 열거 불가능
 + 내부 메서드 [[Construct]] 를 갖지 않는 non-constructor, new 연산자와 함께 호출할 수 없다.
 
- #### 25.5.5 클래스에서 정의한 메서드의 특징
-
-+ 메서드 축약 표현 사용
-+ 콤마 필요 없음
-+ 암묵적으로 strict mode 로 실행
-+ 열거 불가능
-+ 내부 메서드 [[Construct]] 를 갖지 않는 non-constructor, new 연산자와 함께 호출할 수 없다.
-
 <br>
 
 ### 25.6 클래스의 인스턴스 생성 과정
