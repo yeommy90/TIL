@@ -100,6 +100,335 @@
 + controller : 각 객체를 연결해 게이머가 추측한 값이 모델에 전달되어 게임 상태가 갱신되도록 보장하고 게임이 종료되었는지 확인하는 책임을 집니다. (유저의 추측값)
 + onload 되면 전함생성 후 유저의 입력값을 받아 controller에 전달 -> 입력값 유효성 검사 후 숫자로 변환해 model에 전달하고 명중여부, 격침여부 확인 -> view에서 화면 갱신
 
+<br>
+
+## 비동기 코딩
+
++ 대부분의 자바스크립트 코드는 이벤트에 응답하기 위해 작성됩니다.
++ 이벤트에 응답하려면 이벤트 처리기 함수를 작성하고 등록합니다. 예를 들어 클릭 이벤트에 처리기를 등록하려면 처리기 함수를 요소의 onclick 속성에 할당합니다.
++ 이벤트를 처리하도록 작성한 코드는 위에서 아래로 차례대로 모두 실행되는 코드와는 다릅니다. 이벤트 처리기는 언제 어떤 순서로도 실행될 수 있으므로 <b>비동기</b>적입니다.
++ DOM 요소의 이벤트는 이벤트 종류 및 타깃 등 이벤트에 대한 추가 정보를 가진 속성을 담은 이벤트 객체를 이벤트 처리기에 전달합니다. (click, load, e.target 등)
++ 여러 이벤트가 짧은 시간 안에 발생할 경우, 이벤트 큐에 발생한 순서대로 저장하고 나서 브라우저가 하나씩 처리합니다.
+
+```javascript
+window.onload = function() {
+    var images = document.getElementByTagName("img");
+    for (var i = 0; i < images.length; i++) {
+        images[i].onclick = showAnswer;
+    }
+}
+
+// img 태그를 가져온 images DOM 요소의 onclick 속성에 이벤트 객체를 담은 이벤트 처리기를 전달합니다.
+function showAnswer(e) {
+    var image = e.target;
+    image.src = image.id + ".jpg";
+}
+```
+
++ setTimeout()과 setInterval() 함수는 일정한 시간이 지난 후에 시간 이벤트를 발생시킵니다.
+
+```javascript
+// 이벤트 처리기는 그저 경고창만 보여줍니다.
+function timerHandler() {
+    alert("머해용");
+}
+
+// 스톱워치, 5초를 기다린 후 처리기를 호출합니다.
+setTimeout(timerHandler, 5000);
+```
+
+<br>
+
+## 일급 함수
+
+#### 함수 선언문과 함수 표현식
+
++ 함수는 함수 선언문이나 함수 표현식을 이용해 정의할 수 있습니다.
++ 함수 선언문은 브라우저가 코드를 평가하기 전에 먼저 함수 선언을 처리하고 평가할 때 함수와 함께 함수명과 동일한 변수를 생성합니다. 이 변수에는 함수 참조가 저장됩니다.
++ 함수 표현식은 나머지 코드와 마찬가지로 코드를 실행할 때 평가됩니다. 브라우저가 함수 표현식을 평가할 때 함수를 생성하지만 이 함수에 대한 참조를 관리하는 건 개발자의 몫입니다.
+
+#### 일급 값과 일급 함수
+
++ 일급값은 변수에 할당하거나, 데이터 구조체에 포함시키거나, 함수에 전달하거나, 함수에서 반환할 수 있습니다.
++ 함수 참조는 일급값입니다.
++ 함수도 숫자, 문자열, 불린형, 객체와 똑같은 값이고 호출할 수 있다는 점이 나머지 값들과 다를 뿐입니다.
++ 함수에 대한 참조를 이용해 언제든 함수를 호출할 수 있습니다.
++ 새로운 검사를 추가하거나 기존 검사 함수에 대한 요구사항이 바뀌거나, 승객을 나타내는 데이터 구조가 바뀔 경우, 융통성을 가진 구조로 만든다면 코드를 추가하거나 바꿀 때 전체적인 복잡도를 줄여서 버그가 생길 가능성을 줄일 수 있습니다.
+
+```javascript
+var passengers = [
+  { name: "김함수", paid: true, ticket: "일반석" },
+  { name: "닥터 이블", paid: true, ticket: "일등석" },
+  { name: "박루프", paid: false, ticket: "일등석" },
+  { name: "최호출", paid: true, ticket: "우등석" }
+];
+
+// 승객의 배열, 각 승객에 대해 조건을 검사하는 방법을 알고 있는 함수를 파라미터로 갖습니다.
+function processPassengers(passengers, testFunction) {
+  for (var i = 0; i < passengers.length; i++) {
+    if (testFunction(passengers[i])) { // 전체 승객에 대해 반복합니다.
+      return false; // 검사에 실패하면 이륙할 수 없습니다.
+    }
+  }
+  return true;
+}
+
+// 승객 한 명을 파라미터로 갖습니다.
+function checkNoFlyList(passenger) {
+  return (passenger.name === "닥터 이블");
+}
+function checkNotPaid(passenger) {
+  return (!passenger.paid); // 지급하지 않았다면 true를 반환합니다.
+}
+
+// 함수에 함수를 전달합니다.
+var allCanFly = processPassengers(passengers, checkNoFlyList);
+var allPaid = processPassengers(passengers, checkNotPaid);
+if (!allCanFly || !allPaid) {
+  console.log("이륙 불가");
+}
+```
+
++ 함수를 설계할 때에는 하나의 함수가 하나의 일만 제대로 하게 하는 것이 일반적인 원칙입니다.
+
+```javascript
+// 이 함수는 음료제공, 영화상영, 식사제공 등 서비스하는 하나의 일만 해야합니다.
+function serveCustomer(passenger) {
+  createDrinkOrder(passenger);
+}
+
+// 음료수 주문을 처리하는 코드를 별도로 만듭니다.
+function createDrinkOrder(passenger) {
+  if (passenger.ticket === "일등석") {
+    alert("칵테일, 와인");
+  } else {
+    alert("물, 콜라");
+  }
+}
+```
+
++ 함수 자체를 매번 실행하는 것보다 함수가 반환한 함수 자체를 저장한 변수를 사용하는 것이 더 간단합니다.
+
+```javascript
+function serveCustomer(passenger) {
+  var getDrinkOrderFunction = createDrinkOrder(passenger); // 함수가 반환한 함수 자체를 저장한 변수
+  getDrinkOrderFunction();
+}
+
+function createDrinkOrder(passenger) {
+  var orderFunction;
+
+  if (passenger.ticket === "일등석") {
+    orderFunction = function() {
+      alert("칵테일, 와인");
+    };
+  } else {
+    orderFunction = function() {
+      alert("물, 콜라");
+    };
+  }
+  return orderFunction; // 함수가 반환한 함수
+}
+```
+
+#### 배열의 sort() 메서드 사용법
+
++ 자바스크립트 배열은 sort()라는 메서드를 갖고 있어서 배열에 있는 두 요소를 비교하는 방법을 아는 함수를 전달하면 배열을 정렬할 수 있습니다.
++ 전달할 비교 함수는 비교하는 두 요소에 따라 0보다 큰 값, 0, 0보다 작은 값을 반환합니다.
+
+```javascript
+var numberArray = [60, 50, 62, 58, 54, 54];
+
+function compareNumbers(num1, num2) {
+	if (num1 > num2) { // 오름차순 정렬입니다. (내림차순의 경우 num2 > num1)
+		return 1;
+	} else if (num1 === num2) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+
+numbersArray.sort(compareNumbers);
+console.log(numberArray);
+```
+
+<br>
+
+### 익명함수, 범위, 클로저
+
+#### 익명 함수
+
++ 함수 선언문으로 함수를 정의할 때에는 이름이 반드시 붙지만, 함수 표현식으로 정의할 때에는 꼭 붙여야 하는 것은 아닙니다.
++ 익명 함수(Anonymous Function)를 사용하면 코드가 훨씬 더 간결해지고 읽기 좋아지며 유지보수성도 좋아집니다.
+
+```javascript
+function handler() { alert("로딩 완료!"); }
+window.onload = handler;
+                           
+window.onload = function() { alert("로딩 완료!"); };
+
+// 1. handler 변수는 단지 window.onload 속성에 할당하기 위해 존재한다.
+// 2. 페이지가 로딩될 때에만 실행하기 위한 것으로 코드 안에서 handler를 다시 사용하지 않는다.
+```
+
++ 함수 참조가 필요한 곳이라면 어디든 함수 표현식을 대신 쓸 수 있습니다. 함수 표현식을 평가하면 함수 참조가 되기 때문입니다.
+
+```javascript
+function cookieAlarm() {
+	alert("쿠키 꺼내");
+}
+setTimeout(cookieAlarm, 600000);
+
+setTimeout(function() { 
+  	  alert("쿠키 꺼내"); 
+	}, 600000);
+```
+
+#### 범위
+
++ 함수를 다른 함수 안에 넣으면(중첩) 안에 있는 함수를 볼 수 있는 범위가 제한됩니다.
++ 코드의 최상위 수준(전역)에서 정의된 함수는 전역 범위에 들어가지만, 다른 함수 안에서 정의된 함수는 지역 범위에 들어갑니다. 
++ 렉시컬 스코프(Lexical Scope) : 눈으로 보는 코드의 정적인 구조에 따라 변수의 범위를 정한다는 것을 의미합니다.
++ 자바스크립트 함수는 언제나 자신이 정의된 범위 환경에서 평가됩니다. 함수 안에서 어떤 변수가 어디에서 오는지 알고 싶다면 가장 가까이에서 에워싸고 있는 함수에서 최상위 함수로 올라가면서 검색하세요.
+
+```javascript
+var justVar = "전역 변수";
+
+function whereAreYou() {
+	var justVar = "지역 변수";
+	return justVar;
+}
+
+var result = whereAreYou();
+console.log(result); // 지역 변수
+```
+
+```javascript
+var justVar = "전역 변수";
+
+function whereAreYou() {
+	var justVar = "지역 변수";
+    
+	function inner() {
+		return justVar;
+	}
+    
+	return inner(); // inner 함수는 전역 변수가 아니라 정적인 코드에서 자신과 가장 가까운 지역 변수를 반환합니다.
+}
+
+var result = whereAreYou();
+console.log(result); // 지역 변수
+```
+
+```javascript
+var justVar = "전역 변수";
+
+function whereAreYou() {
+	var justVar = "지역 변수";
+    
+	function inner() {
+		return justVar;
+	}
+    
+	return inner; // inner 함수를 그저 반환하지만 inner 가 가진 환경에 따라 지역 변수를 반환합니다.
+}
+
+var innerFunction = whereAreYou();
+var result = innerFunction();
+console.log(result);
+
+// 모든 지역 변수는 환경에 저장됩니다.
+// 함수를 반환할 때에는 함수뿐 아니라 함수와 연결된 환경도 함께 반환합니다.
+```
+
+#### 클로저
+
++ 클로저는 참조하는 환경을 갖고 있는 함수입니다.
++ 자유변수는 지역 범위에서 정의되지 않은 변수입니다.
++ 함수를 닫는다는 것은 필요한 모든 자유 변수들을 제공하는 것을 말합니다.
++ 모든 자유 변수에 대한 값을 갖고 있는 환경을 가질 때 함수를 '닫는다' 라고 합니다. 자유 변수가 있는 함수와 자유 변수를 알 수 있는 환경을 결합하면 클로저가 됩니다.
+
+```javascript
+var count = 0;
+
+function counter() {
+	count = count + 1;
+	return count;
+}
+
+console.log(counter());
+// count를 전역 변수로 사용한다는 문제점이 있습니다.
+```
+
+```javascript
+function makeCounter() {
+	var count = 0;
+	
+	function counter() {
+		count = count + 1;
+		return count;
+	}
+	return counter;
+}
+var doCount = makeCounter();
+console.log(doCount());
+console.log(doCount());
+console.log(doCount());
+// 전역에서는 count 변수를 볼 수 없습니다.
+// count 자유 변수를 가진 counter 함수는 닫혀있고 그 환경을 포함해 클로저가 됩니다.
+```
+
+```javascript
+function makeCounter() {
+	var count = 0;
+	
+	return {
+		increment: function() {
+			count++;
+			return count;
+		}
+	};
+}
+
+var counter = makeCounter();
+console.log(counter.increment());
+console.log(counter.increment());
+console.log(counter.increment());
+```
+
+#### 이벤트 처리기로 클로저 생성하기
+
+```javascript
+var count = 0;
+
+window.onload = function() {
+	var button = document.getElementById("clickme");
+    button.onclick = handleClick;
+};
+
+function handleClick() {
+	var message = "나를 ";
+	var div = document.getElementById("message");
+	count++
+	div.innerHTML = message + count + "번 눌렀따";
+}
+// 전역 변수를 사용하면 문제가 생길 수 있습니다.
+
+window.onload = function() {
+	var count = 0;
+	var message = "나를 ";
+	var div = document.getElementById("message");
+	var button = document.getElementById("clickme");
+
+	button.onclick = function() {
+		count++;
+		div.innerHTML = message + count + "번 눌렀따";
+	};
+};
+// onclick 속성에 할당된 함수에는 3개의 자유 변수가 있습니다. 이는 클로저입니다.
+```
+
 
 
 
