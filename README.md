@@ -9,7 +9,6 @@
 ### Categories
 
 + [JavaScript](#javascript)
-
 * [Network](#network)
 * [Basic](#basic)
 * [Certificate](#certificate)
