@@ -26,4 +26,6 @@
     <!--
     <Manager pathname="" />
     -->
+
+   <ResourceLink global="dbcp_myoracle" name="dbcp_myoracle" type="javax.sql.DataSource"/>
 </Context>
