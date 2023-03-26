@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width", initial-scale="1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function validate(phoneNumber) {
+      if(phoneNumber.length !== 8) {
+        alert("false");
+      }
+      var first = phoneNumber.substring(0,3);
+      var second = phoneNumber.substring(4);
+
+      if(phoneNumber.charAt(3) !== "-" || isNaN(first) || isNaN(second)) {
+        alert("false");
+      }
+      alert("true");
+    }
+
+    validate('0.5-9999');
+  </script>
+</body>
+</html>
